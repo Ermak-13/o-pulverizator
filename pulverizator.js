@@ -1,25 +1,39 @@
 function init() {
-  var MAX_RADIUS_FACTOR = 1/6,
-      MIN_RADIUS_FACTOR = 1/15;
+  var MAX_RADIUS_FACTOR = 1/20,
+      MIN_RADIUS_FACTOR = 1/40;
 
   var canvas = document.getElementById('o-pulverizator-canvas'),
       context = canvas.getContext('2d');
 
   window.addEventListener('resize', resizeCanvas, false);
 
+  function pageHeight() {
+    var B = document.body,
+        H = document.documentElement,
+        height;
+
+    if (typeof document.height !== 'undefined') {
+        height = document.height;
+    } else {
+        height = Math.max( B.scrollHeight, B.offsetHeight,H.clientHeight, H.scrollHeight, H.offsetHeight );
+    }
+
+    return height;
+  }
+
   function resizeCanvas() {
     canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
+    canvas.height = pageHeight();
   }
   resizeCanvas();
 
   function xHandler(event) {
-    var x = event.x - canvas.offsetLeft;
+    var x = event.pageX - canvas.offsetLeft;
     return x;
   }
 
   function yHandler() {
-    var y = event.y - canvas.offsetTop;
+    var y = event.pageY - canvas.offsetTop;
     return y;
   }
 
@@ -46,12 +60,19 @@ function init() {
     context.fill();
   }
 
-  canvas.addEventListener('click', function (event) {
+  function clickHandler(event) {
     var x = xHandler(event),
         y = yHandler(event);
 
     drawPulverizator(x, y);
-  }, false);
+  }
+  canvas.addEventListener('click', clickHandler, false);
+
+  // for blogspot ;)
+  //var content = document.getElementsByClassName('content')[0];
+  //content.addEventListener('click', clickHandler, false);
 }
 
-init();
+window.onload = function () {
+  init();
+}
